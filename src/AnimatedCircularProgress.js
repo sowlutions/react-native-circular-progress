@@ -9,12 +9,14 @@ export default class AnimatedCircularProgress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      appState: AppState.currentState,
       chartFillAnimation: new Animated.Value(props.prefill || 0)
     }
   }
 
   componentDidMount() {
     this.animateFill();
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentDidUpdate(prevProps) {
@@ -36,6 +38,21 @@ export default class AnimatedCircularProgress extends React.Component {
     ).start();
   }
 
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+   _handleAppStateChange = (nextAppState) => {
+      if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+        // Fix bug on Android where the drawing is not displayed after the app is
+        // backgrounded / screen is turned off. Restart the animation when the app
+        // comes back to the foreground.
+        this.setState({ chartFillAnimation: new Animated.Value(this.props.prefill || 0)});
+        this.animateFill();
+      }
+      this.setState({appState: nextAppState});
+    }
+    
   performLinearAnimation(toValue, duration) {
     Animated.timing(this.state.chartFillAnimation, {
       toValue: toValue,

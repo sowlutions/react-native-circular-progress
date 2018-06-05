@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-<<<<<<< HEAD
-import { View, Animated, AppState } from 'react-native';
-=======
 import {
   Animated,
   AppState,
@@ -10,7 +7,6 @@ import {
   View,
   ViewPropTypes
 } from 'react-native';
->>>>>>> original/master
 import CircularProgress from './CircularProgress';
 const AnimatedProgress = Animated.createAnimatedComponent(CircularProgress);
 
@@ -48,7 +44,6 @@ export default class AnimatedCircularProgress extends React.Component {
     ).start(onAnimationComplete);
   }
 
-<<<<<<< HEAD
   componentWillUnmount() {
     AppState.removeEventListener('change', this._handleAppStateChange);
   }
@@ -63,13 +58,10 @@ export default class AnimatedCircularProgress extends React.Component {
       }
       this.setState({appState: nextAppState});
     }
-    
-  performLinearAnimation(toValue, duration) {
-=======
+
   performTimingAnimation(toValue, duration, easing = Easing.linear) {
     const { onLinearAnimationComplete } = this.props;
 
->>>>>>> original/master
     Animated.timing(this.state.chartFillAnimation, {
       toValue,
       easing,
